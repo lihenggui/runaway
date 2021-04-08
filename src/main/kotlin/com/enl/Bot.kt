@@ -4,7 +4,7 @@ import com.charleskorn.kaml.Yaml
 import com.github.kotlintelegrambot.bot
 import com.github.kotlintelegrambot.dispatch
 import com.github.kotlintelegrambot.dispatcher.command
-import com.github.kotlintelegrambot.dispatcher.text
+import com.github.kotlintelegrambot.dispatcher.handlers.CommandHandlerEnvironment
 import com.github.kotlintelegrambot.entities.ChatId
 import com.github.kotlintelegrambot.network.fold
 import java.io.File
@@ -15,31 +15,32 @@ fun main() {
     val config = getConfig()
     val bot = bot {
         token = config.token
-        dispatch {
-            command("update") {
-                println("Received update command")
-                config.funds.forEach { fund ->
-                    val data = FundData(fund)
-                    val summary = config.template.format(
-                        fund.name,
-                        getTime(),
-                        data.latestNetWorth,
-                        data.latestIncrease,
-                        data.totalIncrease,
-                        data.sourceUrl
-                    )
-                    println("Query ${fund.name}, $data")
-                    val result = bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = summary, disableWebPagePreview = true)
-                    result.fold({
-                        println("Message sent")
-                    }, {
-                        println("Error while sending message ${it.exception}")
-                    })
-                }
-            }
-        }
+        dispatch { command("update") { updateFundData(config) } }
     }
     bot.startPolling()
+}
+
+private fun CommandHandlerEnvironment.updateFundData(config: Config) {
+    println("Received update command")
+    config.funds.forEach { fund ->
+        val data = FundData(fund)
+        val summary = config.template.format(
+            fund.name,
+            getTime(),
+            data.latestNetWorth,
+            data.latestIncrease,
+            data.totalIncrease,
+            data.sourceUrl
+        )
+        println("Query ${fund.name}, $data")
+        val result =
+            bot.sendMessage(chatId = ChatId.fromId(message.chat.id), text = summary, disableWebPagePreview = true)
+        result.fold({
+            println("Message sent")
+        }, {
+            println("Error while sending message ${it.exception}")
+        })
+    }
 }
 
 private fun getConfig(): Config {
