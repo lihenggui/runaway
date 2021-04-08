@@ -29,7 +29,7 @@ dependencies {
     implementation("org.jsoup:jsoup:1.13.1")
     implementation("org.quartz-scheduler:quartz:2.3.2")
 }
-val mainClass = "com.enl.Bot" // replace it!
+val mainClass = "com.enl.Bot"
 
 tasks {
     register("fatJar", Jar::class.java) {
