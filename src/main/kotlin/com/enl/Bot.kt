@@ -15,12 +15,12 @@ fun main() {
     val config = getConfig()
     val bot = bot {
         token = config.token
-        dispatch { command("update") { updateFundData(config) } }
+        dispatch { command("update") { handleUpdateCommand(config) } }
     }
     bot.startPolling()
 }
 
-private fun CommandHandlerEnvironment.updateFundData(config: Config) {
+private fun CommandHandlerEnvironment.handleUpdateCommand(config: Config) {
     println("Received update command")
     config.funds.forEach { fund ->
         val data = FundData(fund)

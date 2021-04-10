@@ -28,6 +28,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
     implementation("org.jsoup:jsoup:1.13.1")
     implementation("org.quartz-scheduler:quartz:2.3.2")
+    implementation("org.apache.logging.log4j:log4j-api:2.14.1")
+    implementation("org.apache.logging.log4j:log4j-core:2.14.1")
 }
 val mainClass = "com.enl.Bot"
 
