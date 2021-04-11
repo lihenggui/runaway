@@ -8,6 +8,7 @@ import org.quartz.JobBuilder
 import org.quartz.Scheduler
 import org.quartz.TriggerBuilder
 import org.quartz.impl.StdSchedulerFactory
+import java.io.File
 import java.util.*
 
 fun main() {

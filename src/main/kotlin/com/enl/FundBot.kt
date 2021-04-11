@@ -55,7 +55,13 @@ class FundBot {
     }
 
     private fun getConfig(): Config {
-        val text = File(ClassLoader.getSystemResource("config.yaml").file).readText()
+        val filename = "config.yaml"
+        val configPath = if (File(filename).exists()) {
+            File(filename)
+        } else {
+            File(ClassLoader.getSystemResource("config.yaml").file)
+        }
+        val text = configPath.readText()
         return Yaml.default.decodeFromString(Config.serializer(), text)
     }
 

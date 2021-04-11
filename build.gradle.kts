@@ -31,7 +31,7 @@ dependencies {
     implementation( "org.slf4j:slf4j-simple:1.7.30")
     implementation( "org.slf4j:slf4j-api:1.7.30")
 }
-val mainClass = "com.enl.Main"
+val mainClass = "com.enl.MainKt"
 
 tasks {
     register("fatJar", Jar::class.java) {
