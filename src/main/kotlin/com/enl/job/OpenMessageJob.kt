@@ -10,6 +10,9 @@ class OpenMessageJob : Job {
     override fun execute(context: JobExecutionContext?) {
         val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.CHINESE)
         println("Execute OpenMessageJob at time ${sdf.format(Date())}")
-        FundBot().sendMessage("开盘，快来")
+        FundBot().run {
+            sendMessage("开盘了！！！\uD83D\uDCC8")
+            sendComeOnSticker()
+        }
     }
 }
