@@ -4,6 +4,7 @@ import com.charleskorn.kaml.Yaml
 import com.github.kotlintelegrambot.bot
 import com.github.kotlintelegrambot.dispatch
 import com.github.kotlintelegrambot.dispatcher.command
+import com.github.kotlintelegrambot.dispatcher.sticker
 import com.github.kotlintelegrambot.entities.ChatId
 import com.github.kotlintelegrambot.network.fold
 import java.io.File
@@ -14,7 +15,12 @@ class FundBot {
     private val config = getConfig()
     private val bot = bot {
         token = config.token
-        dispatch { command("update") { updateFundDataToChannel() } }
+        dispatch {
+            command("update") { updateFundDataToChannel() }
+            command("run") { sendRunAwaySticker() }
+            command("come") { sendComeOnSticker() }
+            sticker { println(this.media.fileId) }
+        }
     }
 
     fun startListening() {
@@ -38,7 +44,29 @@ class FundBot {
     }
 
     fun sendMessage(summary: String) =
-        bot.sendMessage(chatId = ChatId.fromId(config.channelId.toLong()), text = summary, disableWebPagePreview = true)
+        bot.sendMessage(
+            chatId = ChatId.fromId(config.channelId.toLong()),
+            text = summary,
+            disableWebPagePreview = true
+        )
+
+    fun sendRunAwaySticker() {
+        bot.sendSticker(
+            chatId = ChatId.fromId(config.channelId.toLong()),
+            "CAACAgUAAxkBAANHYHmjKbVtB57qg0HjEmJYistrk3MAAocAA1u0iA26P5WVji3k3R8E",
+            replyMarkup = null
+        )
+        println("Send run away sticker")
+    }
+
+    fun sendComeOnSticker() {
+        bot.sendSticker(
+            chatId = ChatId.fromId(config.channelId.toLong()),
+            "CAACAgUAAxkBAANIYHmjoHcZa-Vsy5Z0iewnk68VpU8AApoAA1u0iA2xuSp5vf9W6h8E",
+            replyMarkup = null
+        )
+        println("Send come on sticker")
+    }
 
     private fun getFundData(fund: Fund, config: Config): String {
         val data = FundData(fund)
@@ -66,7 +94,7 @@ class FundBot {
     }
 
     private fun getTime(): String {
-        val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.CHINESE)
+        val sdf = SimpleDateFormat("yyyy/MM/dd", Locale.CHINESE)
         return sdf.format(Date())
     }
 }
