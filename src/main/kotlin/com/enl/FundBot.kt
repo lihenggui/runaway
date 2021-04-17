@@ -7,11 +7,13 @@ import com.github.kotlintelegrambot.dispatcher.command
 import com.github.kotlintelegrambot.dispatcher.sticker
 import com.github.kotlintelegrambot.entities.ChatId
 import com.github.kotlintelegrambot.network.fold
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
 class FundBot {
+    private val logger = LoggerFactory.getLogger(FundBot::class.java)
     private val config = getConfig()
     private val bot = bot {
         token = config.token
@@ -25,10 +27,12 @@ class FundBot {
     }
 
     fun startListening() {
+        logger.debug("Start listening events")
         bot.startPolling()
     }
 
     fun stopListening() {
+        logger.debug("Stop listening events")
         bot.stopPolling()
     }
 
@@ -37,9 +41,9 @@ class FundBot {
             val summary = getFundData(fund, config)
             val result = sendMessage(summary)
             result.fold({
-                println("Message sent")
+                logger.debug("Message sent")
             }, {
-                println("Error while sending message ${it.exception}")
+                logger.error("Error while sending message ${it.exception}", it)
             })
         }
     }
@@ -57,7 +61,7 @@ class FundBot {
             "CAACAgUAAxkBAANHYHmjKbVtB57qg0HjEmJYistrk3MAAocAA1u0iA26P5WVji3k3R8E",
             replyMarkup = null
         )
-        println("Send run away sticker")
+        logger.trace("Send run away sticker")
     }
 
     fun sendGoodSticker() {
@@ -66,7 +70,7 @@ class FundBot {
             "CAACAgUAAxkBAANOYHp_Vu_BjdTHcVEVn9SnPv1A6gkAAoYAA1u0iA1gJpgUC-QrPh8E",
             replyMarkup = null
         )
-        println("Send good sticker")
+        logger.trace("Send good sticker")
     }
 
     fun sendComeOnSticker() {
@@ -75,7 +79,7 @@ class FundBot {
             "CAACAgUAAxkBAANIYHmjoHcZa-Vsy5Z0iewnk68VpU8AApoAA1u0iA2xuSp5vf9W6h8E",
             replyMarkup = null
         )
-        println("Send come on sticker")
+        logger.trace("Send come on sticker")
     }
 
     private fun getFundData(fund: Fund, config: Config): String {
@@ -88,7 +92,7 @@ class FundBot {
             data.totalIncrease,
             data.sourceUrl
         )
-        println("Query ${fund.name}, $data")
+        logger.trace("Query ${fund.name}, $data")
         return summary
     }
 
