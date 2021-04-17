@@ -19,6 +19,7 @@ class FundBot {
             command("update") { updateFundDataToChannel() }
             command("run") { sendRunAwaySticker() }
             command("come") { sendComeOnSticker() }
+            command("good") { sendGoodSticker() }
             sticker { println(this.media.fileId) }
         }
     }
@@ -57,6 +58,15 @@ class FundBot {
             replyMarkup = null
         )
         println("Send run away sticker")
+    }
+
+    fun sendGoodSticker() {
+        bot.sendSticker(
+            chatId = ChatId.fromId(config.channelId.toLong()),
+            "CAACAgUAAxkBAANOYHp_Vu_BjdTHcVEVn9SnPv1A6gkAAoYAA1u0iA1gJpgUC-QrPh8E",
+            replyMarkup = null
+        )
+        println("Send good sticker")
     }
 
     fun sendComeOnSticker() {
