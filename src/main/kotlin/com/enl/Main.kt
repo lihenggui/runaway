@@ -1,5 +1,6 @@
 package com.enl
 
+import com.enl.job.BaseJob
 import com.enl.job.ClosedMessageJob
 import com.enl.job.OpenMessageJob
 import com.enl.job.UpdateFundDataJob
@@ -12,46 +13,20 @@ import java.util.*
 
 fun main() {
     val scheduler = StdSchedulerFactory().scheduler
-    scheduleOpenSendMessageJob(scheduler)
-    scheduleClosedSendMessageJob(scheduler)
-    scheduleRegularUpdateChannelJob(scheduler)
+    scheduleJob(scheduler, OpenMessageJob::class.java, "0 15 9 ? * *")
+    scheduleJob(scheduler, ClosedMessageJob::class.java, "0 15 9 ? * *")
+    scheduleJob(scheduler, UpdateFundDataJob::class.java, "0 0 17 ? * *")
     val bot = FundBot()
     bot.startListening()
 }
 
-private fun scheduleOpenSendMessageJob(scheduler: Scheduler) {
-    println("Scheduling open send message job")
-    val jobDetail = JobBuilder.newJob(OpenMessageJob::class.java).build()
+private fun scheduleJob(scheduler: Scheduler, job: Class<out BaseJob>, cornExpression: String) {
+    println("Scheduling job $job at $cornExpression")
+    val jobDetail = JobBuilder.newJob(job).build()
     val trigger = TriggerBuilder.newTrigger()
         .startNow()
         .withSchedule(
-            CronScheduleBuilder.cronSchedule("0 15 9 ? * *").inTimeZone(TimeZone.getTimeZone("GMT+8:00"))
-        )
-        .build()
-    scheduler.scheduleJob(jobDetail, trigger)
-    scheduler.start()
-}
-
-private fun scheduleClosedSendMessageJob(scheduler: Scheduler) {
-    println("Scheduling close send message job")
-    val jobDetail = JobBuilder.newJob(ClosedMessageJob::class.java).build()
-    val trigger = TriggerBuilder.newTrigger()
-        .startNow()
-        .withSchedule(
-            CronScheduleBuilder.cronSchedule("0 0 15 ? * *").inTimeZone(TimeZone.getTimeZone("GMT+8:00"))
-        )
-        .build()
-    scheduler.scheduleJob(jobDetail, trigger)
-    scheduler.start()
-}
-
-private fun scheduleRegularUpdateChannelJob(scheduler: Scheduler) {
-    println("Scheduling regular fund update job")
-    val jobDetail = JobBuilder.newJob(UpdateFundDataJob::class.java).build()
-    val trigger = TriggerBuilder.newTrigger()
-        .startNow()
-        .withSchedule(
-            CronScheduleBuilder.cronSchedule("0 0 17 ? * *").inTimeZone(TimeZone.getTimeZone("GMT+8:00"))
+            CronScheduleBuilder.cronSchedule(cornExpression).inTimeZone(TimeZone.getTimeZone("GMT+8:00"))
         )
         .build()
     scheduler.scheduleJob(jobDetail, trigger)
