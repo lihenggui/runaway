@@ -6,7 +6,6 @@ import org.quartz.JobBuilder
 import org.quartz.Scheduler
 import org.quartz.TriggerBuilder
 import org.quartz.impl.StdSchedulerFactory
-import java.net.URL
 import java.util.*
 
 fun main() {

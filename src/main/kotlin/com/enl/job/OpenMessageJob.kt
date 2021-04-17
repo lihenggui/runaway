@@ -8,7 +8,7 @@ class OpenMessageJob : BaseJob() {
     override fun execute(context: JobExecutionContext?) {
         super.execute(context)
         if (!DayInfo.isTradingDay()) {
-            println("Non trading day, skip")
+            logger.debug("Non trading day, skip")
             return
         }
         FundBot().run {
