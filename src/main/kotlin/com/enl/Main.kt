@@ -8,7 +8,6 @@ import org.quartz.JobBuilder
 import org.quartz.Scheduler
 import org.quartz.TriggerBuilder
 import org.quartz.impl.StdSchedulerFactory
-import java.io.File
 import java.util.*
 
 fun main() {
@@ -26,7 +25,7 @@ private fun scheduleOpenSendMessageJob(scheduler: Scheduler) {
     val trigger = TriggerBuilder.newTrigger()
         .startNow()
         .withSchedule(
-            CronScheduleBuilder.cronSchedule("0 15 9 ? * MON-FRI").inTimeZone(TimeZone.getTimeZone("GMT+8:00"))
+            CronScheduleBuilder.cronSchedule("0 15 9 ? * *").inTimeZone(TimeZone.getTimeZone("GMT+8:00"))
         )
         .build()
     scheduler.scheduleJob(jobDetail, trigger)
@@ -39,7 +38,7 @@ private fun scheduleClosedSendMessageJob(scheduler: Scheduler) {
     val trigger = TriggerBuilder.newTrigger()
         .startNow()
         .withSchedule(
-            CronScheduleBuilder.cronSchedule("0 00 15 ? * MON-FRI").inTimeZone(TimeZone.getTimeZone("GMT+8:00"))
+            CronScheduleBuilder.cronSchedule("0 0 15 ? * *").inTimeZone(TimeZone.getTimeZone("GMT+8:00"))
         )
         .build()
     scheduler.scheduleJob(jobDetail, trigger)
@@ -52,7 +51,7 @@ private fun scheduleRegularUpdateChannelJob(scheduler: Scheduler) {
     val trigger = TriggerBuilder.newTrigger()
         .startNow()
         .withSchedule(
-            CronScheduleBuilder.cronSchedule("0 0 17 ? * MON-FRI").inTimeZone(TimeZone.getTimeZone("GMT+8:00"))
+            CronScheduleBuilder.cronSchedule("0 0 17 ? * *").inTimeZone(TimeZone.getTimeZone("GMT+8:00"))
         )
         .build()
     scheduler.scheduleJob(jobDetail, trigger)

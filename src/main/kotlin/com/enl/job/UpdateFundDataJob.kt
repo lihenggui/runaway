@@ -1,15 +1,16 @@
 package com.enl.job
 
 import com.enl.FundBot
-import org.quartz.Job
+import com.enl.day.DayInfo
 import org.quartz.JobExecutionContext
-import java.text.SimpleDateFormat
-import java.util.*
 
-class UpdateFundDataJob : Job {
+class UpdateFundDataJob : BaseJob() {
     override fun execute(context: JobExecutionContext?) {
-        val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.CHINESE)
-        println("Execute UpdateFundDataJob at time ${sdf.format(Date())}")
+        super.execute(context)
+        if (!DayInfo.isTradingDay()) {
+            println("Non trading day, skip")
+            return
+        }
         FundBot().updateFundDataToChannel()
     }
 }
