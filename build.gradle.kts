@@ -30,6 +30,7 @@ dependencies {
     implementation("org.quartz-scheduler:quartz:2.3.2")
     implementation( "org.slf4j:slf4j-simple:1.7.30")
     implementation( "org.slf4j:slf4j-api:1.7.30")
+    implementation("com.google.code.gson:gson:2.8.6")
 }
 val mainClass = "com.enl.MainKt"
 
