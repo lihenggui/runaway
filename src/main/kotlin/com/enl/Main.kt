@@ -1,10 +1,7 @@
 package com.enl
 
 import com.enl.job.*
-import org.quartz.CronScheduleBuilder
-import org.quartz.JobBuilder
-import org.quartz.Scheduler
-import org.quartz.TriggerBuilder
+import org.quartz.*
 import org.quartz.impl.StdSchedulerFactory
 import java.util.*
 
@@ -22,6 +19,7 @@ private fun scheduleJobs() {
     scheduleJob(scheduler, CheckValueJob::class.java, "0 0 15 ? * *")
     scheduleJob(scheduler, ClosedMessageJob::class.java, "0 0 15 ? * *")
     scheduleJob(scheduler, UpdateFundDataJob::class.java, "0 0 17 ? * *")
+    scheduleRepeatJob(scheduler, NewsUpdateJob::class.java, 1)
 }
 
 private fun scheduleJob(scheduler: Scheduler, job: Class<out BaseJob>, cornExpression: String) {
@@ -30,6 +28,17 @@ private fun scheduleJob(scheduler: Scheduler, job: Class<out BaseJob>, cornExpre
     val trigger = TriggerBuilder.newTrigger()
         .startNow()
         .withSchedule(CronScheduleBuilder.cronSchedule(cornExpression))
+        .build()
+    scheduler.scheduleJob(jobDetail, trigger)
+    scheduler.start()
+}
+
+private fun scheduleRepeatJob(scheduler: Scheduler, job: Class<out BaseJob>, time: Int) {
+    println("Scheduling job $job repeat at $time")
+    val jobDetail = JobBuilder.newJob(job).build()
+    val trigger = TriggerBuilder.newTrigger()
+        .startNow()
+        .withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInMinutes(time).repeatForever())
         .build()
     scheduler.scheduleJob(jobDetail, trigger)
     scheduler.start()

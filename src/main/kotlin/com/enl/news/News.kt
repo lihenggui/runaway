@@ -1,0 +1,32 @@
+package com.enl.news
+
+data class News(
+    val anchor: String,
+    val anchor_image_url: String,
+    val check_status: String,
+    val check_time: String,
+    val check_user: String,
+    val comment_list: CommentList,
+    val commentid: String,
+    val compere_id: Int,
+    val compere_info: String,
+    val create_time: String,
+    val creator: String,
+    val docurl: String,
+    val ext: String,
+    val id: Int,
+    val is_delete: Int,
+    val is_focus: Int,
+    val is_need_check: String,
+    val like_nums: Int,
+    val mender: String,
+    val multimedia: String,
+    val old_live_cid: String,
+    val rich_text: String,
+    val source_content_id: String,
+    val tag: List<Tag>,
+    val top_value: Int,
+    val type: Int,
+    val update_time: String,
+    val zhibo_id: Int
+)
