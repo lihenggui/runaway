@@ -13,10 +13,15 @@ class NewsUpdateJob : BaseJob() {
     override fun execute(context: JobExecutionContext?) {
         super.execute(context)
         val news = getNonPublishedNews(getFocusedNews())
+        if (news.isNullOrEmpty()) {
+            logger.debug("No news to publish, return")
+            return
+        }
         val bot = FundBot()
         news.forEach {
             bot.sendMessage("${it.create_time} ${it.rich_text}")
         }
+        logger.info("Published ${news.size} news")
     }
 
     private fun getFocusedNews(): List<News> {
@@ -33,6 +38,7 @@ class NewsUpdateJob : BaseJob() {
     private fun getNonPublishedNews(news: List<News>): List<News> {
         val database = File("data.txt")
         if (!database.exists()) {
+            logger.info("No data found, create a new one")
             database.createNewFile()
         }
         val publishedNews = database.readLines()
