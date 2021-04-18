@@ -11,7 +11,7 @@ class CheckValueJob : BaseJob() {
     override fun execute(context: JobExecutionContext?) {
         super.execute(context)
         if (!DayInfo.isTradingDay()) {
-            logger.debug("Non trading day, skip")
+            logger.info("Non trading day, skip")
             return
         }
         FundBot().sendMessage(getValueMessage())
@@ -22,7 +22,7 @@ class CheckValueJob : BaseJob() {
             .openStream()
             .bufferedReader()
             .readLines()
-        logger.debug(data.toString())
+        logger.info(data.toString())
         val szzsData = getValueAndIncreaseFromString(data[0])
         val szzsValue = szzsData.first
         val szzsIncrease = szzsData.second

@@ -9,7 +9,7 @@ class ClosedMessageJob : BaseJob() {
     override fun execute(context: JobExecutionContext?) {
         super.execute(context)
         if (!DayInfo.isTradingDay()) {
-            logger.debug("Non trading day, skip")
+            logger.info("Non trading day, skip")
             return
         }
         val bot = FundBot()
@@ -31,7 +31,7 @@ class ClosedMessageJob : BaseJob() {
             .openStream()
             .bufferedReader()
             .readLine()
-        logger.debug(data)
+        logger.info(data)
         return data.split("=")
             .last()
             .removeSuffix(";")
