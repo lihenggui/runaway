@@ -29,9 +29,7 @@ private fun scheduleJob(scheduler: Scheduler, job: Class<out BaseJob>, cornExpre
     val jobDetail = JobBuilder.newJob(job).build()
     val trigger = TriggerBuilder.newTrigger()
         .startNow()
-        .withSchedule(
-            CronScheduleBuilder.cronSchedule(cornExpression).inTimeZone(TimeZone.getTimeZone("GMT+8:00"))
-        )
+        .withSchedule(CronScheduleBuilder.cronSchedule(cornExpression))
         .build()
     scheduler.scheduleJob(jobDetail, trigger)
     scheduler.start()
