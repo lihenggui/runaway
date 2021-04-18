@@ -1,7 +1,7 @@
 package com.enl.news
 
 data class CommentList(
-    val list: List<Any>,
+    val list: List<Comment>,
     val qreply: Int,
     val qreply_show: Int,
     val show: Int,
