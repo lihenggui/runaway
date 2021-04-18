@@ -11,8 +11,7 @@ import java.util.*
 fun main() {
     TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"))
     scheduleJobs()
-    val bot = FundBot()
-    bot.startListening()
+    FundBot().startListening()
 }
 
 private fun scheduleJobs() {
