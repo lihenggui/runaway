@@ -20,7 +20,7 @@ data class News(
     val is_need_check: String,
     val like_nums: Int,
     val mender: String,
-    val multimedia: Multimedia?,
+    val multimedia: Any?,
     val old_live_cid: String,
     val rich_text: String,
     val source_content_id: String,
