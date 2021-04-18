@@ -11,6 +11,6 @@ open class BaseJob : Job {
     protected val logger: Logger = LoggerFactory.getLogger(this::class.java)
     override fun execute(context: JobExecutionContext?) {
         val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.CHINESE)
-        logger.debug("Execute ClosedMessageJob at time ${sdf.format(Date())}")
+        logger.debug("Execute at time ${sdf.format(Date())}")
     }
 }
