@@ -8,7 +8,7 @@ class UpdateFundDataJob : BaseJob() {
     override fun execute(context: JobExecutionContext?) {
         super.execute(context)
         if (!DayInfo.isTradingDay()) {
-            logger.debug("Non trading day, skip")
+            logger.info("Non trading day, skip")
             return
         }
         FundBot().updateFundDataToChannel()

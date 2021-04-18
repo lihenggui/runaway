@@ -27,12 +27,12 @@ class FundBot {
     }
 
     fun startListening() {
-        logger.debug("Start listening events")
+        logger.info("Start listening events")
         bot.startPolling()
     }
 
     fun stopListening() {
-        logger.debug("Stop listening events")
+        logger.info("Stop listening events")
         bot.stopPolling()
     }
 
@@ -41,7 +41,7 @@ class FundBot {
             val summary = getFundData(fund, config)
             val result = sendMessage(summary)
             result.fold({
-                logger.debug("Message sent")
+                logger.info("Message sent")
             }, {
                 logger.error("Error while sending message ${it.exception}", it)
             })
