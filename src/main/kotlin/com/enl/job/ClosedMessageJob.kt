@@ -15,13 +15,13 @@ class ClosedMessageJob : BaseJob() {
         val bot = FundBot()
         if (isIncreased()) {
             bot.run {
-                sendMessage("止跌了\uD83C\uDFC3")
-                sendRunAwaySticker()
+                bot.sendMessage("还行。")
+                sendGoodSticker()
             }
         } else {
             bot.run {
-                bot.sendMessage("还行。")
-                sendGoodSticker()
+                sendMessage("止跌了\uD83C\uDFC3")
+                sendRunAwaySticker()
             }
         }
     }
