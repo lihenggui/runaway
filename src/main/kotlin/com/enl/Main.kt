@@ -14,7 +14,7 @@ fun main() {
 private fun scheduleJobs() {
     val scheduler = StdSchedulerFactory().scheduler
     scheduleJob(scheduler, OpenMessageJob::class.java, "0 15 9 ? * *")
-    scheduleJob(scheduler, CheckValueJob::class.java, "0 25 9 ? * *")
+    scheduleJob(scheduler, CheckValueJob::class.java, "10 30 9 ? * *")
     scheduleJob(scheduler, CheckValueJob::class.java, "0 30 11 ? * *")
     scheduleJob(scheduler, CheckValueJob::class.java, "0 0 15 ? * *")
     scheduleJob(scheduler, ClosedMessageJob::class.java, "0 0 15 ? * *")
