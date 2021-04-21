@@ -44,6 +44,10 @@ class FundBot {
             val result = sendMessage(summary)
             result.fold({
                 logger.info("Message sent")
+                bot.pinChatMessage(
+                    chatId = ChatId.fromId(config.channelId.toLong()),
+                    messageId = it?.result?.messageId ?: 0L
+                )
             }, {
                 logger.error("Error while sending message ${it.exception}", it)
             })
@@ -57,6 +61,52 @@ class FundBot {
             text = summary,
             disableWebPagePreview = true
         )
+    }
+
+    fun sendRandomGreedManSticker() {
+        val stickerSet = bot.getStickerSet("greedtime")
+        val stickerId = stickerSet.first?.body()?.result?.stickers?.random()?.fileUniqueId ?: ""
+        bot.sendSticker(
+            chatId = ChatId.fromId(config.channelId.toLong()),
+            stickerId,
+            replyMarkup = null
+        )
+    }
+
+    fun sendKissSticker() {
+        bot.sendSticker(
+            chatId = ChatId.fromId(config.channelId.toLong()),
+            "CAACAgUAAxkBAANRYIAZ1Vq66Qh-juWAWQABJ5cGKEYxAALzAAOeCaIH9HRGhoJnizwfBA",
+            replyMarkup = null
+        )
+        logger.info("Send kiss sticker")
+    }
+
+    fun sendJumpSticker() {
+        bot.sendSticker(
+            chatId = ChatId.fromId(config.channelId.toLong()),
+            "CAACAgUAAxkBAANSYIAZ4wIhbxyRqKAdLi-gQr0daq4AAg8AA54Joge-Z5BowLimGB8E",
+            replyMarkup = null
+        )
+        logger.info("Send jump sticker")
+    }
+
+    fun sendNoJumpSticker() {
+        bot.sendSticker(
+            chatId = ChatId.fromId(config.channelId.toLong()),
+            "CAACAgUAAxkBAANPYIAWmHcNE-98VdeSz7OQuzlhMh4AAgYAA54JogcBlX8VCz0Bqx8E",
+            replyMarkup = null
+        )
+        logger.info("Send no jump sticker")
+    }
+
+    fun sendAdjustSticker() {
+        bot.sendSticker(
+            chatId = ChatId.fromId(config.channelId.toLong()),
+            "CAACAgUAAxkBAANQYIAW94uABBMl1SP_DFK7ZK2cZI8AAhwAA54JogcQR7T9FD8rHx8E",
+            replyMarkup = null
+        )
+        logger.info("Send adjust sticker")
     }
 
     fun sendRunAwaySticker() {
