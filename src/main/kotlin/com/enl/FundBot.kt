@@ -9,14 +9,17 @@ import com.github.kotlintelegrambot.entities.ChatId
 import com.github.kotlintelegrambot.entities.Message
 import com.github.kotlintelegrambot.network.Response
 import com.github.kotlintelegrambot.network.fold
+import okhttp3.*
 import org.slf4j.LoggerFactory
 import java.io.File
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
 class FundBot {
     private val logger = LoggerFactory.getLogger(FundBot::class.java)
     private val config = getConfig()
+    private val okhttpClient = OkHttpClient.Builder().build()
     private val bot = bot {
         token = config.token
         dispatch {
@@ -56,11 +59,35 @@ class FundBot {
 
     fun sendMessage(summary: String): Pair<retrofit2.Response<Response<Message>?>?, Exception?> {
         logger.info("Send message: $summary")
+        // Send webhook first if defined
+        if (config.webhookUrl.isNotEmpty()) {
+            sendWebhook(summary)
+        }
         return bot.sendMessage(
             chatId = ChatId.fromId(config.channelId.toLong()),
             text = summary,
             disableWebPagePreview = true
         )
+    }
+
+    fun sendWebhook(content: String) {
+        val json =
+            """{"activity": "Run", "iconUri": "https://xqimg.imedao.com/16c330d0b623f713fd180d89.jpeg!800.jpg", "body": "$content"}"""
+        val requestBody = RequestBody.create(MediaType.parse("application/json"), json)
+        val request = Request.Builder()
+            .url(config.webhookUrl)
+            .post(requestBody)
+            .build()
+        val call = okhttpClient.newCall(request)
+        call.enqueue(object : Callback {
+            override fun onResponse(call: Call, response: okhttp3.Response) {
+                logger.info("Call to WebHook, respense code = ${response.code()}")
+            }
+
+            override fun onFailure(call: Call, e: IOException) {
+                logger.error("Fail to call $call", e)
+            }
+        })
     }
 
     fun sendRandomGreedManSticker() {
