@@ -81,11 +81,11 @@ class FundBot {
         val call = okhttpClient.newCall(request)
         call.enqueue(object : Callback {
             override fun onResponse(call: Call, response: okhttp3.Response) {
-                logger.info("Call to WebHook, response code = ${response.code()}")
+
             }
 
             override fun onFailure(call: Call, e: IOException) {
-                logger.error("Fail to call $call", e)
+
             }
         })
     }
