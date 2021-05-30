@@ -43,7 +43,7 @@ class NewsUpdateJob : BaseJob() {
                     text.contains("流入") ||
                     text.contains("涨幅扩大") ||
                     text.contains("净流入达") -> bot.sendComeOnSticker()
-            text.contains("成交额突破") -> bot.sendMessage("GOGOGO!")
+            text.contains("成交额突破") -> bot.sendMessage("冲!")
         }
     }
 
