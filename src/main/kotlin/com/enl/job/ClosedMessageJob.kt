@@ -26,11 +26,17 @@ class ClosedMessageJob : BaseJob() {
                 sendRunAwaySticker()
             }
             in 0.0..1.0 -> bot.run {
-                sendMessage("还行。")
+                sendMessage("还行吧。")
                 sendGoodSticker()
             }
-            in 1.0..10.0 -> bot.run {
-                sendKissSticker()
+            in 1.0..2.0 -> bot.run {
+                sendMessage("冲冲冲！！！")
+            }
+            in 2.0..3.0 -> bot.run {
+                sendMessage("难以置信！")
+            }
+            in 3.0..4.0 -> bot.run {
+                sendMessage("走！会所嫩模！")
             }
             else -> logger.error("Error value ${getIncreasedValue()}")
         }
