@@ -15,11 +15,17 @@ import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class FundBot {
     private val logger = LoggerFactory.getLogger(FundBot::class.java)
     private val config = getConfig()
-    private val okhttpClient = OkHttpClient.Builder().build()
+    private val okhttpClient = OkHttpClient.Builder()
+        .retryOnConnectionFailure(false)
+        .connectTimeout(TIMEOUT, TimeUnit.SECONDS) //连接超时
+        .readTimeout(TIMEOUT, TimeUnit.SECONDS) //读取超时
+        .writeTimeout(TIMEOUT, TimeUnit.SECONDS) //写超时
+        .build()
     private val bot = bot {
         token = config.token
         dispatch {
@@ -191,5 +197,9 @@ class FundBot {
     private fun getTime(): String {
         val sdf = SimpleDateFormat("yyyy/MM/dd", Locale.CHINESE)
         return sdf.format(Date())
+    }
+
+    companion object {
+        private const val TIMEOUT = 30L
     }
 }

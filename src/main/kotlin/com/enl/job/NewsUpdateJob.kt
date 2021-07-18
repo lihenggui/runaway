@@ -5,11 +5,21 @@ import com.enl.news.News
 import com.enl.news.SinaNews
 import com.enl.news.Tag
 import com.google.gson.Gson
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.ResponseBody
 import org.quartz.JobExecutionContext
 import java.io.File
-import java.net.URL
+import java.util.concurrent.TimeUnit
 
 class NewsUpdateJob : BaseJob() {
+    private val client = OkHttpClient.Builder()
+        .retryOnConnectionFailure(false)
+        .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
+        .readTimeout(TIMEOUT, TimeUnit.SECONDS)
+        .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
+        .build()
+
     override fun execute(context: JobExecutionContext?) {
         super.execute(context)
         val news = getNonPublishedNews(getAllFocusedNews()).toMutableList()
@@ -49,22 +59,36 @@ class NewsUpdateJob : BaseJob() {
 
     private fun getAllFocusedNews(): List<News> {
         // Filter A stock only, add &tag_id=10 param
-        val reader = URL("http://zhibo.sina.com.cn/api/zhibo/feed?&page=%251&page_size=5&zhibo_id=152")
-            .openStream()
-            .bufferedReader()
-        val allRecentNewsInfo = Gson().fromJson(reader, SinaNews::class.java)
-        return allRecentNewsInfo.result.data.feed.list.filter { news ->
+        val request = Request.Builder()
+            .url("http://zhibo.sina.com.cn/api/zhibo/feed?&page=%251&page_size=5&zhibo_id=152")
+            .build()
+        var jsonBody: ResponseBody? = null
+        val allRecentNewsInfo: SinaNews?
+        try {
+            jsonBody = client.newCall(request).execute().body() ?: return listOf()
+            allRecentNewsInfo = Gson().fromJson(jsonBody.string(), SinaNews::class.java)
+        } finally {
+            jsonBody?.close()
+        }
+        return allRecentNewsInfo?.result?.data?.feed?.list?.filter { news ->
             // 9 is a magic number for highlights
             news.tag.contains(Tag(id = "9", ""))
-        }
+        } ?: listOf()
     }
 
     private fun getAStockMessage(): List<News> {
-        val reader = URL("http://zhibo.sina.com.cn/api/zhibo/feed?&page=1&page_size=5&zhibo_id=152&tag_id=10")
-            .openStream()
-            .bufferedReader()
-        val allNews = Gson().fromJson(reader, SinaNews::class.java)
-        return allNews.result.data.feed.list
+        val request = Request.Builder()
+            .url("http://zhibo.sina.com.cn/api/zhibo/feed?&page=1&page_size=5&zhibo_id=152&tag_id=10")
+            .build()
+        var jsonBody: ResponseBody? = null
+        val allNews: SinaNews?
+        try {
+            jsonBody = client.newCall(request).execute().body() ?: return listOf()
+            allNews = Gson().fromJson(jsonBody.string(), SinaNews::class.java)
+        } finally {
+            jsonBody?.close()
+        }
+        return allNews?.result?.data?.feed?.list ?: listOf()
     }
 
     private fun getNonPublishedNews(news: List<News>): List<News> {
@@ -81,5 +105,9 @@ class NewsUpdateJob : BaseJob() {
             database.appendText(it.docurl + "\n")
         }
         return nonPublishedNews
+    }
+
+    companion object {
+        private const val TIMEOUT = 30L
     }
 }

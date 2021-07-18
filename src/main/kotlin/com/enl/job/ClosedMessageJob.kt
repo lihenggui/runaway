@@ -15,6 +15,7 @@ class ClosedMessageJob : BaseJob() {
         val bot = FundBot()
         when (getIncreasedValue()) {
             in -10.0..-2.0 -> bot.run {
+                sendMessage("这我是没想到的")
                 sendJumpSticker()
             }
             in -2.0..-1.0 -> bot.run {
