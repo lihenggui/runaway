@@ -16,7 +16,7 @@ private fun scheduleJobs() {
     scheduleJob(scheduler, OpenMessageJob::class.java, "0 15 9 ? * *")
     scheduleJob(scheduler, CheckValueJob::class.java, "10 30 9 ? * *")
     scheduleJob(scheduler, CheckValueJob::class.java, "0 30 11 ? * *")
-    scheduleJob(scheduler, CheckValueJob::class.java, "0 0 15 ? * *")
+    scheduleJob(scheduler, CheckValueJob::class.java, "30 0 15 ? * *")
     scheduleJob(scheduler, ClosedMessageJob::class.java, "0 1 15 ? * *")
     scheduleJob(scheduler, UpdateFundDataJob::class.java, "0 0 17 ? * *")
     scheduleRepeatJob(scheduler, NewsUpdateJob::class.java, 1)
