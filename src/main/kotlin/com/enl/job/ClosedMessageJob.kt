@@ -1,9 +1,10 @@
 package com.enl.job
 
 import com.enl.FundBot
+import com.enl.OkHttp
 import com.enl.day.DayInfo
+import okhttp3.Request
 import org.quartz.JobExecutionContext
-import java.net.URL
 
 class ClosedMessageJob : BaseJob() {
     override fun execute(context: JobExecutionContext?) {
@@ -44,10 +45,17 @@ class ClosedMessageJob : BaseJob() {
     }
 
     private fun getIncreasedValue(): Double {
-        val data = URL("http://hq.sinajs.cn/rn=1618638691874&list=s_sh000001")
-            .openStream()
-            .bufferedReader()
-            .readLine()
+        val request = Request.Builder()
+            .url("http://hq.sinajs.cn/rn=1618638691874&list=s_sh000001")
+            .build()
+        val data = OkHttp.client
+            .newCall(request)
+            .execute()
+            ?.use { it.body()?.string() }
+            ?: run {
+                logger.error("Cannot get increased value")
+                return Double.MIN_VALUE
+            }
         logger.info(data)
         return data.split("=")
             .last()
