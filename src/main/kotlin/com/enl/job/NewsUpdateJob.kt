@@ -63,10 +63,12 @@ class NewsUpdateJob : BaseJob() {
             .url("http://zhibo.sina.com.cn/api/zhibo/feed?&page=%251&page_size=5&zhibo_id=152")
             .build()
         var jsonBody: ResponseBody? = null
-        val allRecentNewsInfo: SinaNews?
+        var allRecentNewsInfo: SinaNews? = null
         try {
             jsonBody = client.newCall(request).execute().body() ?: return listOf()
             allRecentNewsInfo = Gson().fromJson(jsonBody.string(), SinaNews::class.java)
+        } catch (e: Exception) {
+            logger.error("Error in getAllFocusedNews", e)
         } finally {
             jsonBody?.close()
         }
@@ -81,10 +83,12 @@ class NewsUpdateJob : BaseJob() {
             .url("http://zhibo.sina.com.cn/api/zhibo/feed?&page=1&page_size=5&zhibo_id=152&tag_id=10")
             .build()
         var jsonBody: ResponseBody? = null
-        val allNews: SinaNews?
+        var allNews: SinaNews? = null
         try {
             jsonBody = client.newCall(request).execute().body() ?: return listOf()
             allNews = Gson().fromJson(jsonBody.string(), SinaNews::class.java)
+        } catch (e: Exception) {
+            logger.error("Error in getAStockMessage", e)
         } finally {
             jsonBody?.close()
         }
