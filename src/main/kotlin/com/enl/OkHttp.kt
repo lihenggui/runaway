@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit
 object OkHttp {
     private const val TIMEOUT = 30L
     val client: OkHttpClient = OkHttpClient.Builder()
-        .retryOnConnectionFailure(false)
+        .retryOnConnectionFailure(true)
         .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
         .readTimeout(TIMEOUT, TimeUnit.SECONDS)
         .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
