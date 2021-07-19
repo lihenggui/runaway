@@ -22,9 +22,9 @@ class FundBot {
     private val config = getConfig()
     private val okhttpClient = OkHttpClient.Builder()
         .retryOnConnectionFailure(false)
-        .connectTimeout(TIMEOUT, TimeUnit.SECONDS) //连接超时
-        .readTimeout(TIMEOUT, TimeUnit.SECONDS) //读取超时
-        .writeTimeout(TIMEOUT, TimeUnit.SECONDS) //写超时
+        .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
+        .readTimeout(TIMEOUT, TimeUnit.SECONDS)
+        .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
         .build()
     private val bot = bot {
         token = config.token
@@ -87,11 +87,15 @@ class FundBot {
         val call = okhttpClient.newCall(request)
         call.enqueue(object : Callback {
             override fun onResponse(call: Call, response: okhttp3.Response) {
-
+                try {
+                    response.body()?.close()
+                } catch (e: Exception) {
+                    logger.error("Error closing the response body", e)
+                }
             }
 
             override fun onFailure(call: Call, e: IOException) {
-
+                logger.error("Fail to send a WebHook", e)
             }
         })
     }
