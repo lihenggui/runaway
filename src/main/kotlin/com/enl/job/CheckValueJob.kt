@@ -1,9 +1,10 @@
 package com.enl.job
 
 import com.enl.FundBot
+import com.enl.OkHttp
 import com.enl.day.DayInfo
+import okhttp3.Request
 import org.quartz.JobExecutionContext
-import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -18,10 +19,17 @@ class CheckValueJob : BaseJob() {
     }
 
     private fun getValueMessage(): String {
-        val data = URL("http://hq.sinajs.cn/rn=1618638691874&list=s_sh000001,s_sz399001,s_sz399006")
-            .openStream()
-            .bufferedReader()
-            .readLines()
+        val request = Request.Builder()
+            .url("http://hq.sinajs.cn/rn=1618638691874&list=s_sh000001,s_sz399001,s_sz399006")
+            .build()
+        val data = OkHttp.client
+            .newCall(request)
+            .execute()
+            ?.use { it.body()?.string()?.lines() }
+            ?: run {
+                logger.error("Cannot get correct value")
+                return ""
+            }
         logger.info(data.toString())
         val szzsData = getValueAndIncreaseFromString(data[0])
         val szzsValue = szzsData.first

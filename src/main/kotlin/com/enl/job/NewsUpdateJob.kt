@@ -1,24 +1,16 @@
 package com.enl.job
 
 import com.enl.FundBot
+import com.enl.OkHttp
 import com.enl.news.News
 import com.enl.news.SinaNews
 import com.enl.news.Tag
 import com.google.gson.Gson
-import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.ResponseBody
 import org.quartz.JobExecutionContext
 import java.io.File
-import java.util.concurrent.TimeUnit
 
 class NewsUpdateJob : BaseJob() {
-    private val client = OkHttpClient.Builder()
-        .retryOnConnectionFailure(false)
-        .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
-        .readTimeout(TIMEOUT, TimeUnit.SECONDS)
-        .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
-        .build()
 
     override fun execute(context: JobExecutionContext?) {
         super.execute(context)
@@ -62,15 +54,12 @@ class NewsUpdateJob : BaseJob() {
         val request = Request.Builder()
             .url("http://zhibo.sina.com.cn/api/zhibo/feed?&page=%251&page_size=5&zhibo_id=152")
             .build()
-        var jsonBody: ResponseBody? = null
         var allRecentNewsInfo: SinaNews? = null
         try {
-            jsonBody = client.newCall(request).execute().body() ?: return listOf()
-            allRecentNewsInfo = Gson().fromJson(jsonBody.string(), SinaNews::class.java)
+            val newsJson = OkHttp.client.newCall(request).execute()?.use { it.body()?.string() }
+            allRecentNewsInfo = Gson().fromJson(newsJson, SinaNews::class.java)
         } catch (e: Exception) {
             logger.error("Error in getAllFocusedNews", e)
-        } finally {
-            jsonBody?.close()
         }
         return allRecentNewsInfo?.result?.data?.feed?.list?.filter { news ->
             // 9 is a magic number for highlights
@@ -82,15 +71,12 @@ class NewsUpdateJob : BaseJob() {
         val request = Request.Builder()
             .url("http://zhibo.sina.com.cn/api/zhibo/feed?&page=1&page_size=5&zhibo_id=152&tag_id=10")
             .build()
-        var jsonBody: ResponseBody? = null
         var allNews: SinaNews? = null
         try {
-            jsonBody = client.newCall(request).execute().body() ?: return listOf()
-            allNews = Gson().fromJson(jsonBody.string(), SinaNews::class.java)
+            val stockMessage = OkHttp.client.newCall(request).execute()?.use { it.body()?.string() }
+            allNews = Gson().fromJson(stockMessage, SinaNews::class.java)
         } catch (e: Exception) {
             logger.error("Error in getAStockMessage", e)
-        } finally {
-            jsonBody?.close()
         }
         return allNews?.result?.data?.feed?.list ?: listOf()
     }
@@ -109,9 +95,5 @@ class NewsUpdateJob : BaseJob() {
             database.appendText(it.docurl + "\n")
         }
         return nonPublishedNews
-    }
-
-    companion object {
-        private const val TIMEOUT = 30L
     }
 }
