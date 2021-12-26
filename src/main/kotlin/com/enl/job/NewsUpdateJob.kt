@@ -17,7 +17,7 @@ class NewsUpdateJob : BaseJob() {
         val news = getNonPublishedNews(getAllFocusedNews()).toMutableList()
         news.addAll(getNonPublishedNews(getAStockMessage()))
         if (news.isNullOrEmpty()) {
-            logger.debug("No news to publish, return")
+            logger.info("No news to publish, return")
             return
         }
         val bot = FundBot()

@@ -1,8 +1,6 @@
 package com.enl
 
-import com.charleskorn.kaml.Yaml
 import com.enl.config.ConfigHelper
-import com.enl.fund.FundData
 import com.enl.fund.FundDataGetter
 import com.github.kotlintelegrambot.bot
 import com.github.kotlintelegrambot.dispatch
@@ -14,7 +12,6 @@ import com.github.kotlintelegrambot.network.Response
 import com.github.kotlintelegrambot.network.fold
 import okhttp3.*
 import org.slf4j.LoggerFactory
-import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -22,7 +19,6 @@ import java.util.*
 class FundBot {
     private val logger = LoggerFactory.getLogger(FundBot::class.java)
     private val config = ConfigHelper.getConfig()
-    private val okhttpClient = OkHttpClient.Builder().build()
     private val bot = bot {
         token = config.token
         dispatch {
