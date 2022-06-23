@@ -6,7 +6,7 @@ data class News(
     val check_status: String,
     val check_time: String,
     val check_user: String,
-    val comment_list: CommentList?,
+    val comment_list: Any?,
     val commentid: String,
     val compere_id: Int,
     val compere_info: String,
