@@ -1,5 +1,6 @@
 package com.enl
 
+import com.enl.day.DayInfo
 import com.enl.job.*
 import org.quartz.*
 import org.quartz.impl.StdSchedulerFactory
@@ -7,8 +8,9 @@ import java.util.*
 
 fun main() {
     TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"))
-    scheduleJobs()
-    FundBot().startListening()
+    DayInfo.isTradingDay()
+//    scheduleJobs()
+//    FundBot().startListening()
 }
 
 private fun scheduleJobs() {

@@ -3,6 +3,10 @@ package com.enl.day
 import com.enl.OkHttp
 import com.google.gson.Gson
 import okhttp3.Request
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZoneId
+import java.util.*
 
 data class DayInfo(
     val code: Int,
@@ -13,7 +17,8 @@ data class DayInfo(
 
     companion object {
         fun isTradingDay(): Boolean {
-            val request = Request.Builder().url("http://timor.tech/api/holiday/info").build()
+            val date = LocalDate.now(ZoneId.of("GMT+8")).toString()
+            val request = Request.Builder().url("http://timor.tech/api/holiday/info/$date").build()
             val data = try {
                 OkHttp.client.newCall(request).execute()?.use { it.body()?.string() }
             } catch (e: Exception) {
@@ -27,5 +32,3 @@ data class DayInfo(
         }
     }
 }
-
-
