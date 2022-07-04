@@ -8,9 +8,8 @@ import java.util.*
 
 fun main() {
     TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"))
-    DayInfo.isTradingDay()
-//    scheduleJobs()
-//    FundBot().startListening()
+    scheduleJobs()
+    FundBot().startListening()
 }
 
 private fun scheduleJobs() {
@@ -27,10 +26,8 @@ private fun scheduleJobs() {
 private fun scheduleJob(scheduler: Scheduler, job: Class<out BaseJob>, cornExpression: String) {
     println("Scheduling job $job at $cornExpression")
     val jobDetail = JobBuilder.newJob(job).build()
-    val trigger = TriggerBuilder.newTrigger()
-        .startNow()
-        .withSchedule(CronScheduleBuilder.cronSchedule(cornExpression))
-        .build()
+    val trigger =
+        TriggerBuilder.newTrigger().startNow().withSchedule(CronScheduleBuilder.cronSchedule(cornExpression)).build()
     scheduler.scheduleJob(jobDetail, trigger)
     scheduler.start()
 }
@@ -38,10 +35,8 @@ private fun scheduleJob(scheduler: Scheduler, job: Class<out BaseJob>, cornExpre
 private fun scheduleRepeatJob(scheduler: Scheduler, job: Class<out BaseJob>, time: Int) {
     println("Scheduling job $job repeat at $time")
     val jobDetail = JobBuilder.newJob(job).build()
-    val trigger = TriggerBuilder.newTrigger()
-        .startNow()
-        .withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInMinutes(time).repeatForever())
-        .build()
+    val trigger = TriggerBuilder.newTrigger().startNow()
+        .withSchedule(SimpleScheduleBuilder.simpleSchedule().withIntervalInMinutes(time).repeatForever()).build()
     scheduler.scheduleJob(jobDetail, trigger)
     scheduler.start()
 }
