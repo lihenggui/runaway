@@ -13,6 +13,6 @@ object OkHttp {
         .build()
 
     fun closeConnections() {
-        client.dispatcher().cancelAll()
+        client.dispatcher.cancelAll()
     }
 }

@@ -8,9 +8,12 @@ import com.github.kotlintelegrambot.dispatcher.command
 import com.github.kotlintelegrambot.dispatcher.sticker
 import com.github.kotlintelegrambot.entities.ChatId
 import com.github.kotlintelegrambot.entities.Message
-import com.github.kotlintelegrambot.network.Response
-import com.github.kotlintelegrambot.network.fold
-import okhttp3.*
+import com.github.kotlintelegrambot.types.TelegramBotResult
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -48,15 +51,15 @@ class FundBot {
                 logger.info("Message sent")
                 bot.pinChatMessage(
                     chatId = ChatId.fromId(config.channelId.toLong()),
-                    messageId = it?.result?.messageId ?: 0L
+                    messageId = it.messageId
                 )
             }, {
-                logger.error("Error while sending message ${it.exception}", it)
+                logger.error("Error while sending message $it")
             })
         }
     }
 
-    fun sendMessage(summary: String): Pair<retrofit2.Response<Response<Message>?>?, Exception?> {
+    fun sendMessage(summary: String): TelegramBotResult<Message> {
         logger.info("Send message: $summary")
         // Send webhook first if defined
         if (config.webhookUrl.isNotEmpty()) {
@@ -72,7 +75,7 @@ class FundBot {
     fun sendWebhook(content: String) {
         val json =
             """{"activity": "NewsBot", "icon": "https://xqimg.imedao.com/16c330d0b623f713fd180d89.jpeg!800.jpg", "body": "$content"}"""
-        val requestBody = RequestBody.create(MediaType.parse("application/json"), json)
+        val requestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
         val request = Request.Builder()
             .url(config.webhookUrl)
             .post(requestBody)
@@ -81,7 +84,7 @@ class FundBot {
         call.enqueue(object : Callback {
             override fun onResponse(call: Call, response: okhttp3.Response) {
                 try {
-                    response.body()?.close()
+                    response.body?.close()
                 } catch (e: Exception) {
                     logger.error("Error closing the response body", e)
                 }

@@ -56,7 +56,7 @@ class NewsUpdateJob : BaseJob() {
             .build()
         var allRecentNewsInfo: SinaNews? = null
         try {
-            val newsJson = OkHttp.client.newCall(request).execute()?.use { it.body()?.string() }
+            val newsJson = OkHttp.client.newCall(request).execute().use { it.body?.string() }
             allRecentNewsInfo = Gson().fromJson(newsJson, SinaNews::class.java)
         } catch (e: Exception) {
             logger.error("Error in getAllFocusedNews", e)
@@ -73,7 +73,7 @@ class NewsUpdateJob : BaseJob() {
             .build()
         var allNews: SinaNews? = null
         try {
-            val stockMessage = OkHttp.client.newCall(request).execute()?.use { it.body()?.string() }
+            val stockMessage = OkHttp.client.newCall(request).execute().use { it.body?.string() }
             allNews = Gson().fromJson(stockMessage, SinaNews::class.java)
         } catch (e: Exception) {
             logger.error("Error in getAStockMessage", e)

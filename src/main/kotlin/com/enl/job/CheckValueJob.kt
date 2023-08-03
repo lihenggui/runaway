@@ -25,7 +25,7 @@ class CheckValueJob : BaseJob() {
         val data = OkHttp.client
             .newCall(request)
             .execute()
-            ?.use { it.body()?.string()?.lines() }
+            .use { it.body?.string()?.lines() }
             ?: run {
                 logger.error("Cannot get correct value")
                 return ""

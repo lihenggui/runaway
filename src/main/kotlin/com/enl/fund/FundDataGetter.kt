@@ -8,7 +8,8 @@ import org.slf4j.LoggerFactory
 
 class FundDataGetter(fund: Fund) {
     private val logger = LoggerFactory.getLogger(this.javaClass)
-    private val ua = "Mozilla/5.0 (Linux; Android 5.0; SM-N9100 Build/LRX21V) > AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 > Chrome/37.0.0.0 Mobile Safari/537.36 > MicroMessenger/6.0.2.56_r958800.520 NetType/WIFI"
+    private val ua =
+        "Mozilla/5.0 (Linux; Android 5.0; SM-N9100 Build/LRX21V) > AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 > Chrome/37.0.0.0 Mobile Safari/537.36 > MicroMessenger/6.0.2.56_r958800.520 NetType/WIFI"
     val sourceUrl = "https://xueqiu.com/p/${fund.id}"
 
     fun getData(): FundData? {
@@ -19,7 +20,7 @@ class FundDataGetter(fund: Fund) {
                 .build()
         )
             .execute()
-            .body()
+            .body
             ?.string()
         if (body == null) {
             logger.error("body is null")

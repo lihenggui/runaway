@@ -20,7 +20,7 @@ data class DayInfo(
             val date = LocalDate.now(ZoneId.of("GMT+8")).toString()
             val request = Request.Builder().url("http://timor.tech/api/holiday/info/$date").build()
             val data = try {
-                OkHttp.client.newCall(request).execute()?.use { it.body()?.string() }
+                OkHttp.client.newCall(request).execute().use { it.body?.string() }
             } catch (e: Exception) {
                 e.printStackTrace()
                 // Return true to debug

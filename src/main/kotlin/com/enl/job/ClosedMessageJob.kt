@@ -51,7 +51,7 @@ class ClosedMessageJob : BaseJob() {
         val data = OkHttp.client
             .newCall(request)
             .execute()
-            ?.use { it.body()?.string() }
+            .use { it.body?.string() }
             ?: run {
                 logger.error("Cannot get increased value")
                 return Double.MIN_VALUE
