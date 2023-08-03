@@ -16,7 +16,7 @@ class NewsUpdateJob : BaseJob() {
         super.execute(context)
         val news = getNonPublishedNews(getAllFocusedNews()).toMutableList()
         news.addAll(getNonPublishedNews(getAStockMessage()))
-        if (news.isNullOrEmpty()) {
+        if (news.isEmpty()) {
             logger.info("No news to publish, return")
             return
         }

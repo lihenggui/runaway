@@ -3,10 +3,8 @@ package com.enl.day
 import com.enl.OkHttp
 import com.google.gson.Gson
 import okhttp3.Request
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
-import java.util.*
 
 data class DayInfo(
     val code: Int,
