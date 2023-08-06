@@ -20,6 +20,6 @@ ENV APP_HOME=/usr/app/
 
 WORKDIR $APP_HOME
 COPY --from=TEMP_BUILD_IMAGE $APP_HOME/build/libs/$ARTIFACT_NAME .
-COPY $APP_HOME/config.yaml .
+COPY --from=TEMP_BUILD_IMAGE $APP_HOME/config.yaml .
 
 ENTRYPOINT exec java -jar ${ARTIFACT_NAME}
