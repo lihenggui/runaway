@@ -14,7 +14,7 @@ COPY . .
 RUN gradle clean fatJar
 
 # actual container
-FROM adoptopenjdk/openjdk17:alpine
+FROM openjdk:17-oracle
 ENV ARTIFACT_NAME=runaway-0.0.1-SNAPSHOT.jar
 ENV APP_HOME=/usr/app/
 
