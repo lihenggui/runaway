@@ -1,5 +1,5 @@
 # temp container to build using gradle
-FROM gradle:8.2.1-jdk17-alpine AS TEMP_BUILD_IMAGE
+FROM gradle:8.2.1-jdk17-focal AS TEMP_BUILD_IMAGE
 ENV APP_HOME=/usr/app/
 WORKDIR $APP_HOME
 COPY build.gradle.kts settings.gradle.kts config.yaml $APP_HOME
